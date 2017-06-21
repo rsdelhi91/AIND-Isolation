@@ -40,6 +40,7 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
+    # Try to make the player chase its opponent
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
     return float(2 * own_moves - opp_moves)
@@ -72,6 +73,8 @@ def custom_score_2(game, player):
     if game.is_winner(player):
         return float("inf")
 
+    # Trying to base a heuristic on the number of moves each player has against
+    # against the remaining spaces on the board
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
     remaining_moves = len(game.get_blank_spaces())
@@ -105,9 +108,9 @@ def custom_score_3(game, player):
     if game.is_winner(player):
         return float("inf")
 
+    # Try to get the distance between the two players on the board
     y1, x1 = game.get_player_location(player)
     y2, x2 = game.get_player_location(game.get_opponent(player))
-    #remaining_moves = len(game.get_blank_spaces())
     return float(math.sqrt((x2 - x1)**2 + (y2 - y1)**2))
 
 
