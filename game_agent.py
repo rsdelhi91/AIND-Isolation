@@ -43,7 +43,7 @@ def custom_score(game, player):
     # Try to make the player chase its opponent
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(2 * own_moves - opp_moves)
+    return float(own_moves - 3 * opp_moves)
 
 def custom_score_2(game, player):
     """Calculate the heuristic value of a game state from the point of view
