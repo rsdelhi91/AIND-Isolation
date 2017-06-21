@@ -307,18 +307,13 @@ class AlphaBetaPlayer(IsolationPlayer):
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
         best_move = (-1, -1)
-        depth = 1
+
         try:
             # The try/except block will automatically catch the exception
             # raised when the timer is about to expire.
-            #while True:
-                #best_move = self.alphabeta(game, depth)
-                #depth += 1
             for depth in range(1, game.width*game.height):
-                best_move = self.alphabeta(game, depth)#self.search_depth)
-                #if best_move == float("inf"):
-                    #break
-            #return self.alphabeta(game, self.search_depth)
+                best_move = self.alphabeta(game, depth)
+               
 
         except SearchTimeout:
             pass  # Handle any actions required after timeout as needed
@@ -374,14 +369,19 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
+        # Retrieve the possible moves available for player
         legal_moves = game.get_legal_moves()
 
+        # If no legal moves exist, return default move
         if not legal_moves:
             return (-1, -1)
 
+        # Initialize best move and best score
         best_move = None
         best_score = float("-inf")
+
         for move in legal_moves:
+            # Retrieve deep copy of game advanced by 1 play
             next_state = game.forecast_move(move)
             score = self.min_value(next_state, depth - 1, alpha, beta)
             if score > best_score:
@@ -392,6 +392,39 @@ class AlphaBetaPlayer(IsolationPlayer):
         return best_move
 
     def max_value(self, game, depth, alpha, beta):
+        """Implement helper function for alpha-beta search as described in the 
+        lectures. This function is used to identify alpha.
+
+        This should be a modified version of ALPHA-BETA-SEARCH in the AIMA text
+        https://github.com/aimacode/aima-pseudocode/blob/master/md/Alpha-Beta-Search.md
+
+        **********************************************************************
+            You MAY add additional methods to this class, or define helper
+                 functions to implement the required functionality.
+        **********************************************************************
+
+        Parameters
+        ----------
+        game : isolation.Board
+            An instance of the Isolation game `Board` class representing the
+            current game state
+
+        depth : int
+            Depth is an integer representing the maximum number of plies to
+            search in the game tree before aborting
+
+        alpha : float
+            Alpha limits the lower bound of search on minimizing layers
+
+        beta : float
+            Beta limits the upper bound of search on maximizing layers
+
+        Returns
+        -------
+        float
+            The score obtained while performing alpha-beta pruning in the current
+             search;
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -411,6 +444,39 @@ class AlphaBetaPlayer(IsolationPlayer):
         return best_score
 
     def min_value(self, game, depth, alpha, beta):
+        """Implement helper function for alpha-beta search as described in the 
+        lectures. This function is used to identify beta.
+
+        This should be a modified version of ALPHA-BETA-SEARCH in the AIMA text
+        https://github.com/aimacode/aima-pseudocode/blob/master/md/Alpha-Beta-Search.md
+
+        **********************************************************************
+            You MAY add additional methods to this class, or define helper
+                 functions to implement the required functionality.
+        **********************************************************************
+
+        Parameters
+        ----------
+        game : isolation.Board
+            An instance of the Isolation game `Board` class representing the
+            current game state
+
+        depth : int
+            Depth is an integer representing the maximum number of plies to
+            search in the game tree before aborting
+
+        alpha : float
+            Alpha limits the lower bound of search on minimizing layers
+
+        beta : float
+            Beta limits the upper bound of search on maximizing layers
+
+        Returns
+        -------
+        float
+            The score obtained while performing alpha-beta pruning in the current
+             search;
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
