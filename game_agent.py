@@ -237,28 +237,68 @@ class MinimaxPlayer(IsolationPlayer):
         return best_move
 
     def minimax_helper(self, game, depth, max_play = True):
+        """Implement helper function for minimax search as described in the lectures.
+        This function is used to identify both the min and the max values available.
+
+        This should be a modified version of MINIMAX-DECISION in the AIMA text.
+        https://github.com/aimacode/aima-pseudocode/blob/master/md/Minimax-Decision.md
+
+        **********************************************************************
+            You MAY add additional methods to this class, or define helper
+                 functions to implement the required functionality.
+        **********************************************************************
+
+        Parameters
+        ----------
+        game : isolation.Board
+            An instance of the Isolation game `Board` class representing the
+            current game state
+
+        depth : int
+            Depth is an integer representing the maximum number of plies to
+            search in the game tree before aborting
+
+        max_play : bookean
+            This is used as a flag to pick either the max or the min part of the 
+            logic to work
+
+        Returns
+        -------
+        float
+            The best score obtained in the current search;
+
+        (int, int)
+            The board coordinates of the best move found in the current search;
+            (-1, -1) if there are no legal moves
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
-        moves = game.get_legal_moves()
 
-        if not moves:
+        # Retrieve the possible moves available for player
+        legal_moves = game.get_legal_moves()
+
+        # If no legal moves exist, return default move
+        if not legal_moves:
             return game.utility(self), (-1, -1)
 
         if depth == 0:
             return self.score(game, self), (-1, -1)
 
+        # Initialize best move
         best_move = None
 
         if max_play:
             best_score = float("-inf")
-            for move in moves:
+            for move in legal_moves:
+                # Retrieve deep copy of game advanced by 1 play
                 next_state = game.forecast_move(move)
                 score, _ = self.minimax_helper(next_state, depth - 1, False)
                 if score > best_score:
                     best_score, best_move = score, move
         else:
             best_score = float("+inf")
-            for move in moves:
+            for move in legal_moves:
+                # Retrieve deep copy of game advanced by 1 play
                 next_state = game.forecast_move(move)
                 score, _ = self.minimax_helper(next_state, depth - 1, True)
                 if score < best_score:
@@ -428,13 +468,16 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
+        # Retrieve the possible moves available for player
         legal_moves = game.get_legal_moves()
 
         if depth == 0:
             return self.score(game, self)
 
+        # Initialize best score
         best_score = float("-inf")
         for move in legal_moves:
+            # Retrieve deep copy of game advanced by 1 play
             next_state = game.forecast_move(move)
             score = self.min_value(next_state, depth - 1, alpha, beta)
             best_score = max(best_score, score)
@@ -480,13 +523,16 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
+        # Retrieve the possible moves available for player
         legal_moves = game.get_legal_moves()
 
         if depth == 0:
             return self.score(game, self)
 
+        # Initialize best score
         best_score = float("inf")
         for move in legal_moves:
+            # Retrieve deep copy of game advanced by 1 play
             next_state = game.forecast_move(move)
             score = self.max_value(next_state, depth - 1, alpha, beta)
             best_score = min(best_score, score)
